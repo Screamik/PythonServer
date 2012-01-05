@@ -3,6 +3,7 @@ To run: server.py [host port]
 Syntax:
 GET key         - gets value of the 'key' from the storage.
 PUT key value   - puts key 'key' with value 'value' into the storage.
+SET SLEEP time  - sets the sleep time for the server.
 
 Note: PUT allows template ${key} 
 This file was created by PyCharm 2.0.1 for binding GitHub repository
