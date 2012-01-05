@@ -1,1 +1,3 @@
+Python server using only standard library.
+To run: server.py [host port]
 This file was created by PyCharm 2.0.1 for binding GitHub repository
