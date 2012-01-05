@@ -46,7 +46,7 @@ class ThreadedTCPRequestHandler(socketserver.StreamRequestHandler):
 
 if __name__ == "__main__":
     try:
-        HOST, PORT = sys.argv[1:]
+        HOST, PORT = sys.argv[1], int(sys.argv[2])
     except:
         HOST, PORT = "127.0.0.1", 1298
     server = socketserver.ThreadingTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
