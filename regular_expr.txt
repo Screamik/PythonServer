@@ -1,0 +1,4 @@
+GET\s+(\S+)$ get_method
+PUT\s+(\S+)\s+(.+) put_method
+SET\s+SLEEP\s+(\d+)$ set_sleep_method
+PORT get_port
