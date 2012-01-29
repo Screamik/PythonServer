@@ -32,23 +32,25 @@ class ThreadedTCPRequestHandler(socketserver.StreamRequestHandler):
     def get_method(self, match_obj):
         sbst = substitutor.Substitutor()
         time.sleep(sbst.getSleepTime())
-        self.wfile.write(('VALUE\n'+sbst.get(match_obj.group(1), None)).encode())
+        self.wfile.write('VALUE\n'.encode())
+        try:
+            self.wfile.write(sbst.get(match_obj.group(1), None).encode())
+        except substitutor.InfiniteRecursionException:
+            self.wfile.write('ERROR: Infinite recursion'.encode())
 
     def put_method(self, match_obj):
         sbst = substitutor.Substitutor()
         rlock = threading.RLock()
         time.sleep(sbst.getSleepTime())
-        rlock.acquire()
-        sbst.put(match_obj.group(1), match_obj.group(2))
-        rlock.release()
+        with rlock:
+            sbst.put(match_obj.group(1), match_obj.group(2))
         self.wfile.write('OK'.encode())
 
     def set_sleep_method(self, match_obj):
         sbst = substitutor.Substitutor()
         rlock = threading.RLock()
-        rlock.acquire()
-        sbst.setSleepTime(int(match_obj.group(1)))
-        rlock.release()
+        with rlock:
+            sbst.setSleepTime(int(match_obj.group(1)))
         self.wfile.write('OK'.encode())
 
 

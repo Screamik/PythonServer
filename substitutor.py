@@ -13,15 +13,13 @@ class Substitutor():
             inProgress = set()
         elif key in inProgress:
             inProgress.clear()
-            return 'Panic!!! Infinite recursion!!!'
+            raise InfiniteRecursionException
         if key in self.storage:
             out = self.storage[key]
         else: return ''
         inProgress.add(key)
         for templ in set(re.findall(r'\$\{(\S+)\}', out)):
             part = self.get(templ, inProgress)
-            if part == 'Panic!!! Infinite recursion!!!':
-                return part
             out = out.replace('${' + templ + '}', part)
         inProgress.remove(key)
         return out
@@ -31,3 +29,6 @@ class Substitutor():
 
     def setSleepTime(self, seconds):
         Substitutor.sleepTime = seconds
+
+
+class InfiniteRecursionException(ValueError): pass
