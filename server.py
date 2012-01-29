@@ -1,18 +1,17 @@
 import socketserver
-import sys
 import time
 import substitutor
 import re
 import threading
-
+from configparser import ConfigParser
 
 class ThreadedTCPRequestHandler(socketserver.StreamRequestHandler):
     def loadMethods(self=None):
         exprs = {}
-        with open('regular_expr.txt', encoding='utf-8')as expr_file:
-            for line in expr_file:
-                key, val = line.split()
-                exprs[val] = re.compile(key)
+        parser = ConfigParser()
+        parser.read('config.txt')
+        for method, expr in parser['regular_expr'].items():
+            exprs[method] = re.compile(expr)
         return exprs
 
     methods = loadMethods()
@@ -55,7 +54,10 @@ class ThreadedTCPRequestHandler(socketserver.StreamRequestHandler):
 
 
 class SimpleThreadedTCPServer(socketserver.ThreadingTCPServer):
-    def __init__(self, server_address, requestHandlerClass):
+    def __init__(self, requestHandlerClass):
+        parser = ConfigParser()
+        parser.read('config.txt')
+        server_address = (parser['server_config']['HOST'], parser['server_config'].getint('PORT'))
         super().__init__(server_address, requestHandlerClass)
         self.port = server_address[1]
 
@@ -63,11 +65,7 @@ class SimpleThreadedTCPServer(socketserver.ThreadingTCPServer):
         return self.port
 
 if __name__ == "__main__":
-    try:
-        HOST, PORT = sys.argv[1], int(sys.argv[2])
-    except:
-        HOST, PORT = "127.0.0.1", 1298
-    server = SimpleThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
+    server = SimpleThreadedTCPServer(ThreadedTCPRequestHandler)
     server.serve_forever()
 
 

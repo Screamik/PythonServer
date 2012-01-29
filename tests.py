@@ -23,7 +23,7 @@ class TestServer(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.server = server.SimpleThreadedTCPServer((cls.HOST, cls.PORT), server.ThreadedTCPRequestHandler)
+        cls.server = server.SimpleThreadedTCPServer(server.ThreadedTCPRequestHandler)
         cls.server_thread = threading.Thread(target=cls.server.serve_forever)
         cls.server_thread.start()
 

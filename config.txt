@@ -1,0 +1,8 @@
+[server_config]
+HOST = 127.0.0.1
+PORT = 1298
+[regular_expr]
+get_method = GET\s+(\S+)$
+put_method = PUT\s+(\S+)\s+(.+)
+set_sleep_method = SET\s+SLEEP\s+(\d+)$
+get_port = PORT
